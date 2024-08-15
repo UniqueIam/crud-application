@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 export default function AddTopic() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -18,10 +17,12 @@ export default function AddTopic() {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/topics", {
+      f
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+      const res = await fetch(`${API_URL}/api/topics`, {
         method: "POST",
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ title, description }),
       });
@@ -29,10 +30,12 @@ export default function AddTopic() {
       if (res.ok) {
         router.push("/");
       } else {
-        throw new Error("Failed to create a topic");
+        const errorData = await res.json();
+        throw new Error(`Failed to create a topic: ${errorData.message || res.statusText}`);
       }
     } catch (error) {
-      console.log(error);
+      console.error("An error occurred:", error);
+      alert("An error occurred while creating the topic.");
     }
   };
 
