@@ -2,10 +2,9 @@ import Link from "next/link";
 import RemoveBtn from "./RemoveBtn";
 import { HiPencilAlt } from "react-icons/hi";
 
-// Function to fetch topics
 const getTopics = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/topics`, {
+    const res = await fetch("http://localhost:3000/api/topics", {
       cache: "no-store",
     });
 
@@ -16,18 +15,11 @@ const getTopics = async () => {
     return res.json();
   } catch (error) {
     console.log("Error loading topics: ", error);
-    return { topics: [] }; // Return an empty array as fallback
   }
 };
 
-// Component to display the list of topics
 export default async function TopicsList() {
   const { topics } = await getTopics();
-
-  // Check if topics are defined and is an array
-  if (!topics || topics.length === 0) {
-    return <p>No topics available.</p>;
-  }
 
   return (
     <>
